@@ -12,9 +12,7 @@ import pandas as pd
 import yfinance as yf
 import requests
 import streamlit as st
-from dotenv import load_dotenv
 
-load_dotenv()
 
 # Configuração da página
 st.set_page_config(

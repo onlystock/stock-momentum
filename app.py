@@ -179,6 +179,29 @@ def extract_sp500() -> list:
         st.error(f"❌ Erro ao extrair S&P500: {e}")
         return []
 
+def extract_sp100() -> list:
+    try:
+        logging.info("Extraindo tickers do S&P100 (2024)")
+        url = "https://en.wikipedia.org/w/index.php?title=S%26P_100&oldid=1260310089"
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/115.0.0.0 Safari/537.36"
+            )
+        }
+
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+
+        tickers = pd.read_html(StringIO(response.text), header=0, match='Symbol')[0].Symbol.values
+        logging.info(f"✅ Extraídos {len(tickers)} tickers do S&P100 (2024)")
+        return tickers.tolist()
+    except Exception as e:
+        logging.error(f"Erro na extração S&P100 (2024): {e}")
+        st.error(f"❌ Erro ao extrair S&P100 (2024): {e}")
+        return []
+    
 def generate_temp_key() -> str:
     """Gera uma chave única para pasta temporária"""
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -336,7 +359,7 @@ def main_app():
         
         source = st.selectbox(
             "📈 Fonte de Dados:",
-            options=['ibrx100', 'sp500'],
+            options=['ibrx100', 'sp500 (hoje)', 'sp100 (2024)'],
             index=0,
             help="Escolha entre IBRX100 ou S&P500"
         )
@@ -385,7 +408,7 @@ def main_app():
             
             # Extrair tickers
             if source == 'ibrx100':
-                PATH_IBRX100 = './IBRX.csv'
+                PATH_IBRX100 = './IBXXDia_20-06-25.csv'
                 if not os.path.exists(PATH_IBRX100):
                     st.error(f"❌ Arquivo IBRX100 não encontrado: {PATH_IBRX100}")
                     st.stop()
@@ -394,6 +417,8 @@ def main_app():
                 if not raw_tickers:
                     st.stop()
                 tickers = transform_tickers(raw_tickers)
+            elif source == 'sp100 (2024)':
+                tickers = extract_sp100()
             else:
                 tickers = extract_sp500()
                 if not tickers:
@@ -486,6 +511,9 @@ def main():
         show_login_form()
     else:
         main_app()
+
+if __name__ == "__main__":
+    main()
 
 if __name__ == "__main__":
     main()

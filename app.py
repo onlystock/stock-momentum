@@ -12,6 +12,9 @@ import pandas as pd
 import yfinance as yf
 import requests
 import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configuração da página
 st.set_page_config(
@@ -27,9 +30,10 @@ def check_authentication():
 
 def authenticate_user(username, password):
     """Autentica o usuário com credenciais do ambiente"""
+
     env_user = os.getenv('USER')
     env_password = os.getenv('PASSWORD')
-    
+
     if not env_user or not env_password:
         st.error("❌ Credenciais não configuradas no servidor")
         return False
@@ -511,9 +515,6 @@ def main():
         show_login_form()
     else:
         main_app()
-
-if __name__ == "__main__":
-    main()
 
 if __name__ == "__main__":
     main()

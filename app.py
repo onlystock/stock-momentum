@@ -410,7 +410,7 @@ def main_app():
             
             # Extrair tickers
             if source == 'ibrx100':
-                PATH_IBRX100 = './IBXXDia_20-06-25.csv'
+                PATH_IBRX100 = './IBRX.csv'
                 if not os.path.exists(PATH_IBRX100):
                     st.error(f"❌ Arquivo IBRX100 não encontrado: {PATH_IBRX100}")
                     st.stop()
